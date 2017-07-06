@@ -1,17 +1,18 @@
 /*
- * Robot.cpp
+ * @file	Robot.cpp
  *
- *  Created on: Jul 2, 2017
- *      Author: user
+ * @author	Yuval Goldberg
+ * @since	29/06/2017
  */
 
 #include "Robot.h"
 
-#define MOVE_SPEED			   (0.4)
-#define TURN_SPEED			   (0.04)
-#define MIN_DISTANCE_FROM_WALL (0.35)
+#define MOVE_SPEED			   (0.8)
+#define TURN_SPEED			   (0.1)
+#define MIN_DISTANCE_FROM_WALL (0.8)
+#define OBS_RANGE		   	   (10)
 
-Robot::Robot() : m_direction()
+Robot::Robot(double size) : m_size(size), m_direction(), currX(0), currY(0), currYaw(0)
 {
 	directions[eRobotDirection_front] = t_direction(MOVE_SPEED, 0.0);
 	directions[eRobotDirection_right] = t_direction(TURN_SPEED, 45.0);
@@ -21,12 +22,18 @@ Robot::Robot() : m_direction()
 	// Initialize the hamster
 	try
 	{
+		if (m_hamster != NULL)
+		{
+			delete m_hamster;
+		}
+
 		m_hamster = new HamsterAPI::Hamster(1);
+		SetDirection(eRobotDirection_front);
 		sleep(1);
 	}
-	catch (const HamsterAPI::HamsterError & connection_error)
+	catch (const HamsterError & connection_error)
 	{
-		HamsterAPI::Log::i("Hamster CTOR", connection_error.what());
+		Log::i("Hamster CTOR", connection_error.what());
 	}
 }
 
@@ -37,14 +44,19 @@ Robot& Robot::GetInstance()
 	return instance;
 }
 
-HamsterAPI::Pose Robot::GetPosition()
+Pose Robot::GetPosition()
 {
 	return m_hamster->getPose();
 }
 
-HamsterAPI::OccupancyGrid Robot::GetOccupancyGrid()
+OccupancyGrid Robot::GetOccupancyGrid()
 {
 	return m_hamster->getSLAMMap();
+}
+
+double Robot::GetSize()
+{
+	return m_size;
 }
 
 bool Robot::IsConnected()
@@ -55,12 +67,21 @@ bool Robot::IsConnected()
 	{
 		isConnected = m_hamster->isConnected();
 	}
-	catch (const HamsterAPI::HamsterError & connection_error)
+	catch (const HamsterError & connection_error)
 	{
-		HamsterAPI::Log::i("Hamster connection", connection_error.what());
+		Log::i("Hamster connection", connection_error.what());
 	}
 
 	return isConnected;
+}
+
+void Robot::UpdatePose()
+{
+	Pose pose = GetPosition();
+
+	currX = pose.getX();
+	currY = pose.getY();
+	currYaw = pose.getHeading();
 }
 
 /* Movement */
@@ -95,7 +116,7 @@ bool Robot::checkWallAhead()
 {
 	int count = 0;
 	std::vector<double> distances;
-	getScansBetween(m_direction.angle - 10, m_direction.angle + 10, distances);//scan the distance from obstacle ahead between Degrees : [170,190]
+	getScansBetween(180 - OBS_RANGE, 180 + OBS_RANGE, distances);//scan the distance from obstacle ahead between Degrees : [170,190]
 	for (size_t i = 0; i <= distances.size(); i++)
 	{
 		if (distances[i] < MIN_DISTANCE_FROM_WALL)//the distance from the wall ahead
@@ -118,5 +139,28 @@ void Robot::getScansBetween(double min, double max,std::vector<double> & distanc
 		if (degree >= min && degree <= max)//check between the 2 degree
 			distances.push_back(scan.getDistance(i));
 	}
+}
+
+void Robot::MoveAround()
+{
+	if (checkWallAhead())
+	{
+		Stop();
+		double r = (double) rand() / (double) RAND_MAX;
+		if (r < 0.4)
+		{
+			SetDirection(eRobotDirection_right);
+		} else {
+			SetDirection(eRobotDirection_left);
+		}
+
+		while (checkWallAhead())
+		{
+			Move();
+		}
+	}
+
+	SetDirection(eRobotDirection_front);
+	Move();
 }
 

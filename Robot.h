@@ -1,8 +1,8 @@
 /*
- * Robot.h
+ * @file	Robot.h
  *
- *  Created on: Jul 2, 2017
- *      Author: user
+ * @author	Yuval Goldberg
+ * @since	29/06/2017
  */
 
 #ifndef ROBOT_H_
@@ -12,6 +12,8 @@
 #include <HamsterAPIClientCPP/Hamster.h>
 
 using namespace HamsterAPI;
+
+#define DEFAULT_ROBOT_SIZE	0.25
 
 class Robot
 {
@@ -37,16 +39,15 @@ public:
 	} t_direction;
 
 public:
-	Robot();
+	Robot(double size = DEFAULT_ROBOT_SIZE);
 	virtual ~Robot() {};
 
 	static Robot& GetInstance();
-
-	HamsterAPI::Pose GetPosition();
-
-	HamsterAPI::OccupancyGrid GetOccupancyGrid();
-
 	bool IsConnected();
+	Pose GetPosition();
+	double GetSize();
+	OccupancyGrid GetOccupancyGrid();
+	void UpdatePose();
 
 	/* Movement */
 
@@ -64,12 +65,18 @@ public:
 
 	void getScansBetween(double min, double max,std::vector<double> & distances);
 
+	void MoveAround();
+
 private:
-	HamsterAPI::Hamster* m_hamster;
+	Hamster* m_hamster;
+
+	double m_size;
 
 	t_direction m_direction;
 
 	t_direction directions[eRobotDirection_numberOfDirections];
+
+	double currX, currY, currYaw;
 };
 
 #endif /* ROBOT_H_ */
