@@ -1,23 +1,30 @@
 /*
- * Main.cpp
+ * @file	Main.cpp
  *
- *  Created on: Jul 2, 2017
- *      Author: user
+ * @author	Yuval Goldberg
+ * @since	29/06/2017
  */
 
-#include "Robot.h"
 #include <iostream>
+#include "Robot.h"
+#include "Map.h"
+
 using namespace std;
-
-
 
 int main(int argc, char ** argv)
 {
+
 	Robot myRobot = Robot::GetInstance();
+
+	sleep(3);
+
+	OccupancyGrid grid = myRobot.GetOccupancyGrid();
+	Map* map = new Map(grid, myRobot.GetSize());
 
 	while (myRobot.IsConnected())
 	{
-		myRobot.Move();
+		map->show();
+//		myRobot.MoveAround();
 		sleep(0.5);
 	}
 
