@@ -19,22 +19,22 @@ public:
 	Map(OccupancyGrid &grid, double robotSize);
 	virtual ~Map();
 
-	void show();
-	OccupancyGrid* getCoarseGrid();
-	ECellType** getMap();
-	cv::Mat* getCoarseMatrix();
+	void Show();
+	OccupancyGrid* GetCoarseGrid();
+	ECellType** GetMap();
+	cv::Mat* GetCoarseMatrix();
+
+private:
+	void InitCell(OccupancyGrid &grid, uint32_t i, uint32_t j);
+	void ConvertToCoarseGrid();
+	void Draw();
 
 private:
 	OccupancyGrid& m_grid;
-	OccupancyGrid *coarseGrid;
+	OccupancyGrid *m_coarseGrid;
 	ECellType** m_map;
 	cv::Mat m_matrix;
-
 	int m_robotSizeInPixels;
-
-	void initCell(OccupancyGrid &grid, uint32_t i, uint32_t j);
-	void convertToCoarseGrid();
-	void draw();
 };
 
 #endif /* MAP_H_ */

@@ -14,11 +14,11 @@ public:
 	Node(int xp, int yp, int d, int p);
 	Node(int xp, int yp);
 
-	int getxPos() const;
-	int getyPos() const;
-	int getLevel() const;
-	int getPriority() const;
-	void updatePriority(const int & xDest, const int & yDest);
+	int GetX() const;
+	int GetY() const;
+	int GetLevel() const;
+	int GetPriority() const;
+	void UpdatePriority(const int & xDest, const int & yDest);
 
 	// TODO: Give proprity based on distance from blocked
 	// give better priority to going strait instead of diagonally

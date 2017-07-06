@@ -12,27 +12,27 @@ Node::Node(int xp, int yp, int d, int p) : m_X(xp), m_Y(yp), m_level(d), m_prior
 
 Node::Node(int xp, int yp) : m_X(xp), m_Y(yp), m_level(0), m_priority(0) {}
 
-int Node::getxPos() const
+int Node::GetX() const
 {
 	return m_X;
 }
 
-int Node::getyPos() const
+int Node::GetY() const
 {
 	return m_Y;
 }
 
-int Node::getLevel() const
+int Node::GetLevel() const
 {
 	return m_level;
 }
 
-int Node::getPriority() const
+int Node::GetPriority() const
 {
 	return m_priority;
 }
 
-void Node::updatePriority(const int & xDest, const int & yDest)
+void Node::UpdatePriority(const int & xDest, const int & yDest)
 {
 	// A*
 	m_priority = m_level + estimate(xDest, yDest);

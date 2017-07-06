@@ -44,22 +44,22 @@ Robot& Robot::GetInstance()
 	return instance;
 }
 
-Pose Robot::GetPosition()
+Pose Robot::GetPosition() const
 {
 	return m_hamster->getPose();
 }
 
-OccupancyGrid Robot::GetOccupancyGrid()
+OccupancyGrid Robot::GetOccupancyGrid() const
 {
 	return m_hamster->getSLAMMap();
 }
 
-double Robot::GetSize()
+double Robot::GetSize() const
 {
 	return m_size;
 }
 
-bool Robot::IsConnected()
+bool Robot::IsConnected() const
 {
 	bool isConnected = false;
 
@@ -112,11 +112,11 @@ void Robot::Stop()
 	m_hamster->sendSpeed(0, 0);
 }
 
-bool Robot::checkWallAhead()
+bool Robot::CheckWallAhead() const
 {
 	int count = 0;
 	std::vector<double> distances;
-	getScansBetween(180 - OBS_RANGE, 180 + OBS_RANGE, distances);//scan the distance from obstacle ahead between Degrees : [170,190]
+	GetScansBetween(180 - OBS_RANGE, 180 + OBS_RANGE, distances);//scan the distance from obstacle ahead between Degrees : [170,190]
 	for (size_t i = 0; i <= distances.size(); i++)
 	{
 		if (distances[i] < MIN_DISTANCE_FROM_WALL)//the distance from the wall ahead
@@ -129,7 +129,7 @@ bool Robot::checkWallAhead()
 	return true;
 }
 
-void Robot::getScansBetween(double min, double max,std::vector<double> & distances)
+void Robot::GetScansBetween(double min, double max,std::vector<double> & distances) const
 {
 	HamsterAPI::LidarScan scan = m_hamster->getLidarScan();
 
@@ -143,10 +143,11 @@ void Robot::getScansBetween(double min, double max,std::vector<double> & distanc
 
 void Robot::MoveAround()
 {
-	if (checkWallAhead())
+	if (CheckWallAhead())
 	{
 		Stop();
 		double r = (double) rand() / (double) RAND_MAX;
+
 		if (r < 0.4)
 		{
 			SetDirection(eRobotDirection_right);
@@ -154,7 +155,7 @@ void Robot::MoveAround()
 			SetDirection(eRobotDirection_left);
 		}
 
-		while (checkWallAhead())
+		while (CheckWallAhead())
 		{
 			Move();
 		}

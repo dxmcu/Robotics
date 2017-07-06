@@ -15,27 +15,27 @@ Map::Map(OccupancyGrid &grid, double robotSize) : m_grid(grid)
 	cv::namedWindow(CV_MAP_NAME, cv::WINDOW_NORMAL);
 
 	m_robotSizeInPixels = (robotSize / 2.0) / (grid.getResolution());
-	convertToCoarseGrid();
+	ConvertToCoarseGrid();
 
-	m_matrix = cv::Mat(coarseGrid->getHeight(), coarseGrid->getWidth(), CV_8UC3);
-	m_map = new ECellType*[coarseGrid->getHeight()];
+	m_matrix = cv::Mat(m_coarseGrid->getHeight(), m_coarseGrid->getWidth(), CV_8UC3);
+	m_map = new ECellType*[m_coarseGrid->getHeight()];
 
 	/* Initializing each cell in the grid */
-	for (uint32_t row = 0; row < coarseGrid->getHeight(); row++)
+	for (uint32_t row = 0; row < m_coarseGrid->getHeight(); row++)
 	{
-		m_map[row] = new ECellType[coarseGrid->getWidth()];
+		m_map[row] = new ECellType[m_coarseGrid->getWidth()];
 
-		for (uint32_t col = 0; col < coarseGrid->getWidth(); col++)
+		for (uint32_t col = 0; col < m_coarseGrid->getWidth(); col++)
 		{
-			initCell(*coarseGrid, row, col);
-			m_map[row][col] = coarseGrid->getCell(row,col) == CELL_FREE ? eCellType_emptyCell : eCellType_occupiedCell;
+			InitCell(*m_coarseGrid, row, col);
+			m_map[row][col] = m_coarseGrid->getCell(row,col) == CELL_FREE ? eCellType_emptyCell : eCellType_occupiedCell;
 		}
 	}
 
 	/* Check all cells for nearbys */
-	for (uint32_t row = 0; row < coarseGrid->getHeight(); row++)
+	for (uint32_t row = 0; row < m_coarseGrid->getHeight(); row++)
 	{
-		for (uint32_t col = 0; col < coarseGrid->getWidth(); col++)
+		for (uint32_t col = 0; col < m_coarseGrid->getWidth(); col++)
 		{
 			if (m_map[row][col] != eCellType_emptyCell)
 			{
@@ -67,10 +67,10 @@ Map::Map(OccupancyGrid &grid, double robotSize) : m_grid(grid)
 Map::~Map()
 {
 	cv::destroyWindow(CV_MAP_NAME);
-	delete coarseGrid;
+	delete m_coarseGrid;
 }
 
-void Map::initCell(OccupancyGrid &grid, uint32_t i, uint32_t j)
+void Map::InitCell(OccupancyGrid &grid, uint32_t i, uint32_t j)
 {
 	Cell c = grid.getCell(i, j);
 
@@ -99,13 +99,13 @@ void Map::initCell(OccupancyGrid &grid, uint32_t i, uint32_t j)
 	}
 }
 
-void Map::convertToCoarseGrid()
+void Map::ConvertToCoarseGrid()
 {
 	int rows = m_grid.getHeight() / m_robotSizeInPixels;
 	int cols = m_grid.getWidth() / m_robotSizeInPixels;
 	double resolution = m_grid.getResolution() * m_robotSizeInPixels;
 
-	coarseGrid = new OccupancyGrid(rows, cols, resolution);
+	m_coarseGrid = new OccupancyGrid(rows, cols, resolution);
 	for (int i  = 0; i < rows; i++)
 	{
 		for (int j = 0; j < cols; j++)
@@ -140,30 +140,30 @@ void Map::convertToCoarseGrid()
 			}
 
 			if (isOccupied && !isFree)
-				coarseGrid->setCell(i, j, CELL_OCCUPIED);
+				m_coarseGrid->setCell(i, j, CELL_OCCUPIED);
 			else if (isFree && !isOccupied)
-				coarseGrid->setCell(i, j, CELL_FREE);
+				m_coarseGrid->setCell(i, j, CELL_FREE);
 			else
-				coarseGrid->setCell(i, j, CELL_UNKNOWN);
+				m_coarseGrid->setCell(i, j, CELL_UNKNOWN);
 		}
 	}
 }
 
-OccupancyGrid* Map::getCoarseGrid()
+OccupancyGrid* Map::GetCoarseGrid()
 {
-	return coarseGrid;
+	return m_coarseGrid;
 }
 
-cv::Mat* Map::getCoarseMatrix()
+cv::Mat* Map::GetCoarseMatrix()
 {
 	return &m_matrix;
 }
 
-void Map::draw()
+void Map::Draw()
 {
-	for (uint32_t i = 0; i < coarseGrid->getHeight(); i++)
+	for (uint32_t i = 0; i < m_coarseGrid->getHeight(); i++)
 	{
-		for (uint32_t j = 0; j < coarseGrid->getWidth(); j++)
+		for (uint32_t j = 0; j < m_coarseGrid->getWidth(); j++)
 		{
 			switch (m_map[i][j])
 			{
@@ -204,14 +204,14 @@ void Map::draw()
 		}
 	}
 }
-void Map::show()
+void Map::Show()
 {
-	draw();
+	Draw();
 	cv::imshow(CV_MAP_NAME, m_matrix);
 	cv::waitKey(1);
 }
 
-ECellType** Map::getMap()
+ECellType** Map::GetMap()
 {
 	return m_map;
 }

@@ -43,29 +43,22 @@ public:
 	virtual ~Robot() {};
 
 	static Robot& GetInstance();
-	bool IsConnected();
-	Pose GetPosition();
-	double GetSize();
-	OccupancyGrid GetOccupancyGrid();
+	bool IsConnected() const;
+	Pose GetPosition() const;
+	double GetSize() const;
+	OccupancyGrid GetOccupancyGrid() const;
 	void UpdatePose();
 
 	/* Movement */
-
+	void MoveAround();
 	void Stop();
-
 	void Move();
-
 	void SetDirection(ERobotDirection direction);
-
 	void SetSpeed(double speed);
-
 	void SetAngle(double angle);
 
-	bool checkWallAhead();
-
-	void getScansBetween(double min, double max,std::vector<double> & distances);
-
-	void MoveAround();
+	bool CheckWallAhead() const;
+	void GetScansBetween(double min, double max,std::vector<double> & distances) const;
 
 private:
 	Hamster* m_hamster;
