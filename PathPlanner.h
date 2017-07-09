@@ -39,8 +39,8 @@ private:
 	int** m_openNodesMap;
 	int** m_dirMap;
 
-	static const int DX_DIRECTION[NUMBER_OF_POSSIBLES_DIRECTIONS];
-	static const int DY_DIRECTION[NUMBER_OF_POSSIBLES_DIRECTIONS];
+	static const int X_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS];
+	static const int Y_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS];
 };
 
 #endif /* PATHPLANNER_H_ */

@@ -16,7 +16,7 @@
 typedef struct
 {
 	Node** computedPath;
-	int sizeOfPath;
+	uint32_t length;
 } Path;
 
 /**
@@ -40,5 +40,13 @@ typedef struct
 	double yaw;
 	double belief;
 } Particle;
+
+const cv::Vec3b RED_COLOR = cv::Vec3b(0,0,255);
+const cv::Vec3b BLUE_COLOR = cv::Vec3b(255,0,0);
+const cv::Vec3b GREEN_COLOR = cv::Vec3b(0,255,0);
+const cv::Vec3b YELLOW_COLOR = cv::Vec3b(0,255,255);
+const cv::Vec3b WHITE_COLOR = cv::Vec3b(255,255,255);
+const cv::Vec3b BLACK_COLOR = cv::Vec3b(0,0,0);
+const cv::Vec3b GRAY_COLOR = cv::Vec3b(128,128,128);
 
 #endif /* TYPEDEFS_H_ */

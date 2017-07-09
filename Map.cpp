@@ -78,23 +78,17 @@ void Map::InitCell(OccupancyGrid &grid, uint32_t i, uint32_t j)
 	{
 		case CELL_FREE:
 		{
-			m_matrix.at<cv::Vec3b>(i, j)[0] = 255;
-			m_matrix.at<cv::Vec3b>(i, j)[1] = 255;
-			m_matrix.at<cv::Vec3b>(i, j)[2] = 255;
+			m_matrix.at<cv::Vec3b>(i, j) = WHITE_COLOR;
 			break;
 		}
 		case CELL_OCCUPIED:
 		{
-			m_matrix.at<cv::Vec3b>(i, j)[0] = 0;
-			m_matrix.at<cv::Vec3b>(i, j)[1] = 0;
-			m_matrix.at<cv::Vec3b>(i, j)[2] = 0;
+			m_matrix.at<cv::Vec3b>(i, j) = BLACK_COLOR;
 			break;
 		}
 		default:
 		{
-			m_matrix.at<cv::Vec3b>(i, j)[0] = 128;
-			m_matrix.at<cv::Vec3b>(i, j)[1] = 128;
-			m_matrix.at<cv::Vec3b>(i, j)[2] = 128;
+			m_matrix.at<cv::Vec3b>(i, j) = GRAY_COLOR;
 		}
 	}
 }
@@ -169,34 +163,22 @@ void Map::Draw()
 			{
 				case eCellType_startCell:
 				{
-					// Green
-					m_matrix.at<cv::Vec3b>(i, j)[0] = 0; // BLUE
-					m_matrix.at<cv::Vec3b>(i, j)[1] = 255; // GREEN
-					m_matrix.at<cv::Vec3b>(i, j)[2] = 0; // RED
+					m_matrix.at<cv::Vec3b>(i, j) = GREEN_COLOR;
 					break;
 				}
 				case eCellType_pathCell:
 				{
-					// Blue
-					m_matrix.at<cv::Vec3b>(i, j)[0] = 255; // BLUE
-					m_matrix.at<cv::Vec3b>(i, j)[1] = 0; // GREEN
-					m_matrix.at<cv::Vec3b>(i, j)[2] = 0; // RED
+					m_matrix.at<cv::Vec3b>(i, j) = BLUE_COLOR;
 					break;
 				}
 				case eCellType_endCell:
 				{
-					// Red
-					m_matrix.at<cv::Vec3b>(i, j)[0] = 0; // BLUE
-					m_matrix.at<cv::Vec3b>(i, j)[1] = 0; // GREEN
-					m_matrix.at<cv::Vec3b>(i, j)[2] = 255; // RED
+					m_matrix.at<cv::Vec3b>(i, j) = RED_COLOR;
 					break;
 				}
 				case eCellType_wayPointCell:
 				{
-					// Dark Yellow
-					m_matrix.at<cv::Vec3b>(i, j)[0] = 0;
-					m_matrix.at<cv::Vec3b>(i, j)[1] = 153;
-					m_matrix.at<cv::Vec3b>(i, j)[2] = 153;
+					m_matrix.at<cv::Vec3b>(i, j) = YELLOW_COLOR;
 					break;
 				}
 				default: break;

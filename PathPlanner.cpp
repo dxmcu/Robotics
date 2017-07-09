@@ -9,8 +9,8 @@
 #include "Node.h"
 #include "PathPlanner.h"
 
-const int PathPlanner::DX_DIRECTION[NUMBER_OF_POSSIBLES_DIRECTIONS] = { 1, 1, 0, -1, -1, -1, 0, 1 };
-const int PathPlanner::DY_DIRECTION[NUMBER_OF_POSSIBLES_DIRECTIONS] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+const int PathPlanner::X_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+const int PathPlanner::Y_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 
 // Determine priority (in the priority queue)
 bool operator<(const Node & a, const Node & b)
@@ -88,8 +88,8 @@ string PathPlanner::AStarShortestPath()
 				j = m_dirMap[x][y];
 				c = '0' + (j + NUMBER_OF_POSSIBLES_DIRECTIONS / 2) % NUMBER_OF_POSSIBLES_DIRECTIONS;
 				path = c + path;
-				x += DX_DIRECTION[j];
-				y += DY_DIRECTION[j];
+				x += X_DIRECTIONS[j];
+				y += Y_DIRECTIONS[j];
 			}
 
 			// garbage collection
@@ -107,8 +107,8 @@ string PathPlanner::AStarShortestPath()
 		// generate moves (child nodes) in all possible directions
 		for (i = 0; i < NUMBER_OF_POSSIBLES_DIRECTIONS; i++)
 		{
-			xdx = x + DX_DIRECTION[i];
-			ydy = y + DY_DIRECTION[i];
+			xdx = x + X_DIRECTIONS[i];
+			ydy = y + Y_DIRECTIONS[i];
 
 			// check if out of bounds and
 			if (!(xdx < 0 || xdx > m_grid->getHeight() - 1 || ydy < 0 || ydy > m_grid->getWidth() - 1
@@ -206,8 +206,8 @@ Path* PathPlanner::ComputeShortestPath()
 		{
 			char c = path.at(i);
 			int j = atoi(&c);
-			pathX += DX_DIRECTION[j];
-			pathY += DY_DIRECTION[j];
+			pathX += X_DIRECTIONS[j];
+			pathY += Y_DIRECTIONS[j];
 			m_logicMap[pathX][pathY] = eCellType_pathCell;
 			arrPathNodes[i] = new Node(pathX, pathY);
 		}
@@ -216,7 +216,7 @@ Path* PathPlanner::ComputeShortestPath()
 
 		route = new Path;
 		route->computedPath = arrPathNodes;
-		route->sizeOfPath = path.length();
+		route->length = path.length();
 	}
 
 	return route;

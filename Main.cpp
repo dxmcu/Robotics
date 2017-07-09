@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include "ConfigurationManager/Configuration.h"
+#include "WaypointsManager.h"
 #include "PathPlanner.h"
 #include "Robot.h"
 #include "Map.h"
@@ -37,10 +38,13 @@ int main(int argc, char ** argv)
 		OccupancyGrid grid = myRobot.GetOccupancyGrid();
 		Map* map = new Map(grid, myRobot.GetSize());
 
-		PathPlanner* pl = new PathPlanner(map, config->startX, config->startY, config->destX, config->destY);
-
 		printf("Computing the shortest path\n");
-		path = pl->ComputeShortestPath();
+		PathPlanner* pathPlanner = new PathPlanner(map, config->startX, config->startY, config->destX, config->destY);
+		path = pathPlanner->ComputeShortestPath();
+
+		printf("Generate Waypoints\n");
+		WaypointsManager* waypointsManager = new WaypointsManager(map, path);
+		waypointsManager->GenerateWaypoints();
 
 		while (myRobot.IsConnected())
 		{
