@@ -1,9 +1,10 @@
 /*
- * Configuration.c
+ * @file	Configuration.cpp
  *
- *  Created on: Jul 6, 2017
- *      Author: Tomer
+ * @author	Tomer Sulimany
+ * @since	06/07/2017
  */
+
 // basic file operations
 #include <iostream>
 #include <fstream>
@@ -12,14 +13,14 @@ using namespace std;
 #include "Configuration.h"
 #include "JSON.h"
 
-void Configuration::readJSONFile(const char* path)
+bool Configuration::readJSONFile(const char* path)
 {
 	FILE *fp;
 	long lSize;
 
 	fp = fopen ( path, "rb" );
 	if( !fp )
-		return;
+		return false;
 
 	fseek( fp , 0L , SEEK_END);
 	lSize = ftell( fp );
@@ -30,7 +31,7 @@ void Configuration::readJSONFile(const char* path)
 	if( !json )
 	{
 		fclose(fp);
-		return;
+		return false;
 	}
 
 	/* copy the file into the buffer */
@@ -38,12 +39,13 @@ void Configuration::readJSONFile(const char* path)
 	{
 		fclose(fp);
 		free(json);
-		return;
+		return false;
 	}
 
 	/* do your work here, buffer is a string contains the whole text */
 
 	fclose(fp);
+	return true;
 }
 
 /**
@@ -57,14 +59,22 @@ bool Configuration::readConfiguration(const char* path)
 	// Properties count
 	int count = 0;
 
-	readJSONFile(path);
+	if (!readJSONFile(path))
+	{
+		printf("Failed to read file\n");
+		return false;
+	}
 
 	// Parse example data
 	JSONValue *value = JSON::Parse(json);
 
 	// Did it go wrong?
 	if (value == NULL)
+	{
+		printf("Failed to parse file\n");
 		return false;
+	}
+
 
 	// Retrieve the main object
 	JSONObject root;
@@ -103,13 +113,19 @@ bool Configuration::readConfiguration(const char* path)
 		count++;
 	}
 
+	if(root.find(L"robotSize") != root.end() && root[L"robotSize"]->IsNumber())
+	{
+		size = root[L"robotSize"]->AsNumber();
+		count++;
+	}
+
 	if(root.find(L"resolution") != root.end() && root[L"resolution"]->IsNumber())
 	{
 		resolution = root[L"resolution"]->AsNumber();
 		count++;
 	}
 
-	if(count != 6)
+	if(count != NUMBER_OF_DEFINES)
 		return false;
 
 	return true;

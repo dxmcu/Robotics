@@ -6,24 +6,38 @@
  */
 
 #include <stdio.h>
+#include "ConfigurationManager/Configuration.h"
 #include "PathPlanner.h"
 #include "Robot.h"
 #include "Map.h"
 
 using namespace std;
 
+#define DEFAULT_CONFIGURATION_FILE			"./Config.json"
+
 int main(int argc, char ** argv)
 {
-	Path* path;
+	Path* path = NULL;
 
 	try
 	{
+		Configuration* config = new Configuration();
+		const char* configFile = argc < 2 ? DEFAULT_CONFIGURATION_FILE : argv[1];
+
+		printf("Trying to read config file: %s\n", configFile);
+		if (!config->readConfiguration(configFile))
+		{
+			printf("Failed to read configuration file\n");
+			return -1;
+		}
+
 		Robot myRobot = Robot::GetInstance();
+		myRobot.SetSize(config->size);
 
 		OccupancyGrid grid = myRobot.GetOccupancyGrid();
 		Map* map = new Map(grid, myRobot.GetSize());
 
-		PathPlanner* pl = new PathPlanner(map, 228, 278, 228, 308);
+		PathPlanner* pl = new PathPlanner(map, config->startX, config->startY, config->destX, config->destY);
 
 		printf("Computing the shortest path\n");
 		path = pl->ComputeShortestPath();

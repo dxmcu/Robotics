@@ -45,6 +45,7 @@ public:
 	static Robot& GetInstance();
 	bool IsConnected() const;
 	Pose GetPosition() const;
+	void SetSize(double size);
 	double GetSize() const;
 	OccupancyGrid GetOccupancyGrid() const;
 	void UpdatePose();

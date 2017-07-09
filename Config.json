@@ -1,0 +1,9 @@
+{
+	"startX" : 228,
+	"startY" : 278,
+	"startYaw" : 300,
+	"destX" : 228,
+	"destY" : 308,
+	"robotSize" : 20,
+	"resolution" : 20
+}

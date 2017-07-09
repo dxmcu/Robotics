@@ -54,6 +54,11 @@ OccupancyGrid Robot::GetOccupancyGrid() const
 	return m_hamster->getSLAMMap();
 }
 
+void Robot::SetSize(double size)
+{
+	m_size = size;
+}
+
 double Robot::GetSize() const
 {
 	return m_size;

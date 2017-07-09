@@ -18,16 +18,16 @@ class Configuration
 		double startYaw;
 		double destX;
 		double destY;
+		double size;
 		double resolution;
 
 		bool readConfiguration(const char* path);
 
-	protected:
-
 	private:
-		void readJSONFile(const char* path);
+		bool readJSONFile(const char* path);
 
 		char* json;
+		static const int NUMBER_OF_DEFINES = 7;
 };
 
 #endif /* CONFIGURATION_H_ */
