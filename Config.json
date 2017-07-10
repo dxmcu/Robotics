@@ -4,6 +4,6 @@
 	"startYaw" : 300,
 	"destX" : 228,
 	"destY" : 308,
-	"robotSize" : 20,
+	"robotSize" : 0.25,
 	"resolution" : 20
 }
