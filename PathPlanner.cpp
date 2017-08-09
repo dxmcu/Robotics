@@ -9,9 +9,6 @@
 #include "Node.h"
 #include "PathPlanner.h"
 
-const int PathPlanner::X_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS] = { 1, 1, 0, -1, -1, -1, 0, 1 };
-const int PathPlanner::Y_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-
 // Determine priority (in the priority queue)
 bool operator<(const Node & a, const Node & b)
 {

@@ -19,6 +19,9 @@ public:
 	Map(OccupancyGrid &grid, double robotSize);
 	virtual ~Map();
 
+	int GetWidth();
+	int GetHeight();
+
 	void Show();
 	OccupancyGrid* GetCoarseGrid();
 	ECellType** GetMap();

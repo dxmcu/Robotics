@@ -93,10 +93,20 @@ void Map::InitCell(OccupancyGrid &grid, uint32_t i, uint32_t j)
 	}
 }
 
+int Map::GetWidth()
+{
+	return m_grid.getWidth() / m_robotSizeInPixels;
+}
+
+int Map::GetHeight()
+{
+	return m_grid.getHeight() / m_robotSizeInPixels;
+}
+
 void Map::ConvertToCoarseGrid()
 {
-	int rows = m_grid.getHeight() / m_robotSizeInPixels;
-	int cols = m_grid.getWidth() / m_robotSizeInPixels;
+	int rows = GetHeight();
+	int cols = GetWidth();
 	double resolution = m_grid.getResolution() * m_robotSizeInPixels;
 
 	m_coarseGrid = new OccupancyGrid(rows, cols, resolution);

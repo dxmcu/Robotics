@@ -15,8 +15,6 @@
 using namespace std;
 using namespace HamsterAPI;
 
-#define NUMBER_OF_POSSIBLES_DIRECTIONS	8
-
 class PathPlanner
 {
 public:
@@ -38,9 +36,6 @@ private:
 	int** m_closedNodesMap;
 	int** m_openNodesMap;
 	int** m_dirMap;
-
-	static const int X_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS];
-	static const int Y_DIRECTIONS[NUMBER_OF_POSSIBLES_DIRECTIONS];
 };
 
 #endif /* PATHPLANNER_H_ */

@@ -20,11 +20,8 @@ public:
 	int GetPriority() const;
 	void UpdatePriority(const int & xDest, const int & yDest);
 
-	// TODO: Give proprity based on distance from blocked
-	// give better priority to going strait instead of diagonally
-	void nextLevel(const int & i, int cellValue); // i: direction
+	void nextLevel(const int & i, int cellValue);
 
-	// Estimation function for the remaining distance to the goal.
 	const int & estimate(const int & xDest, const int & yDest) const;
 
 private:
