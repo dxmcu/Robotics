@@ -18,6 +18,7 @@ public:
 
 	/* CTORs */
 	Particle(Position pos, double belief, Map* map);
+	~Particle();
 
 	Particle CreateAnotherParticle() const;
 
@@ -30,7 +31,7 @@ public:
 
 private:
 	void Randomize();
-	void CreateRandomPos();
+	Position CreateRandomPos(Position currPos);
 
 private:
 	Map* m_map;

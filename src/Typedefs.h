@@ -47,6 +47,7 @@ typedef enum
 	eCellType_endCell,
 	eCellType_pathCell,
 	eCellType_wayPointCell,
+	eCellType_particleCell,
 } ECellType;
 
 const cv::Vec3b RED_COLOR = cv::Vec3b(0,0,255);

@@ -11,10 +11,12 @@
 #include "PathPlanner.h"
 #include "Robot.h"
 #include "Map.h"
+#include "LocalizationManager.h"
 
 using namespace std;
 
 #define DEFAULT_CONFIGURATION_FILE			"./Config.json"
+#define AMOUNT_OF_PARTICLES					(100)
 
 int main(int argc, char ** argv)
 {
@@ -46,6 +48,12 @@ int main(int argc, char ** argv)
 		WaypointsManager* waypointsManager = new WaypointsManager(map, path);
 		waypointsManager->GenerateWaypoints();
 
+		printf("Generate particles\n");
+		Position startPosition(config->startX, config->startY, config->startYaw);
+		LocalizationManager* localizationManager = new LocalizationManager(startPosition, map, AMOUNT_OF_PARTICLES);
+		localizationManager->PrintParticles();
+
+		printf("Show map\n");
 		while (myRobot.IsConnected())
 		{
 			map->Show();

@@ -18,6 +18,11 @@ Particle::Particle(Position pos, double belief, Map* map) :
 	Randomize();
 }
 
+Particle::~Particle()
+{
+	m_map->GetMap()[(int)pos.x][(int)pos.y] = eCellType_emptyCell;
+}
+
 Particle Particle::CreateAnotherParticle() const
 {
 	return Particle(pos, belief * 0.9, m_map);
@@ -25,23 +30,31 @@ Particle Particle::CreateAnotherParticle() const
 
 void Particle::Randomize()
 {
+	Position tempPos(pos.x, pos.y, pos.yaw);
+
 	/* Run until getting a free cell */
 	do
 	{
-		CreateRandomPos();
-	} while (m_map->GetMap()[(int)pos.x][(int)pos.y] != eCellType_emptyCell);
+		tempPos = CreateRandomPos(pos);
+	} while (m_map->GetMap()[(int)tempPos.x][(int)tempPos.y] != eCellType_emptyCell);
+
+	pos.x = tempPos.x;
+	pos.y = tempPos.y;
+	pos.yaw = tempPos.yaw;
+
+	m_map->GetMap()[(int)pos.x][(int)pos.y] = eCellType_particleCell;
 }
 
-void Particle::CreateRandomPos()
+Position Particle::CreateRandomPos(Position currPos)
 {
-	if (pos.x < 0 || pos.x >= m_map->GetWidth())
+	if (currPos.x < 0 || currPos.x >= m_map->GetWidth())
 	{
-		pos.x = 0;
+		currPos.x = 0;
 	}
 
-	if (pos.y < 0 || pos.y >= m_map->GetHeight())
+	if (currPos.y < 0 || currPos.y >= m_map->GetHeight())
 	{
-		pos.y = 0;
+		currPos.y = 0;
 	}
 
 	// Calc range of delta particle
@@ -55,16 +68,18 @@ void Particle::CreateRandomPos()
 	double deltaYaw = (rand() % (2 * intYawRange)) - intYawRange;
 	deltaYaw = deltaYaw / 10000;
 
-	pos.x += deltaCol;
-	pos.y += deltaRow;
-	pos.yaw += deltaYaw;
+	return Position(currPos.x + deltaCol, currPos.y + deltaRow, currPos.yaw + deltaYaw);
 }
 
 double Particle::Update(Position deltaPos)
 {
+	m_map->GetMap()[(int)pos.x][(int)pos.y] = eCellType_emptyCell;
+
 	pos.x += deltaPos.x;
 	pos.y += deltaPos.y;
 	pos.yaw += deltaPos.yaw;
+
+	m_map->GetMap()[(int)pos.x][(int)pos.y] = eCellType_particleCell;
 
 	belief = 1.1 * ProbByMove(deltaPos) * belief;
 

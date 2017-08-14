@@ -183,6 +183,11 @@ void Map::Draw()
 				}
 				case eCellType_endCell:
 				{
+					m_matrix.at<cv::Vec3b>(i, j) = GREEN_COLOR;
+					break;
+				}
+				case eCellType_particleCell:
+				{
 					m_matrix.at<cv::Vec3b>(i, j) = RED_COLOR;
 					break;
 				}
