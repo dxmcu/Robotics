@@ -36,6 +36,7 @@ int main(int argc, char ** argv)
 
 		Robot myRobot = Robot::GetInstance();
 		myRobot.SetSize(config->size);
+		myRobot.SetInitPose(config->startX, config->startY, config->startYaw);
 
 		OccupancyGrid grid = myRobot.GetOccupancyGrid();
 		Map* map = new Map(grid, myRobot.GetSize());
@@ -47,19 +48,47 @@ int main(int argc, char ** argv)
 		printf("Generate Waypoints\n");
 		WaypointsManager* waypointsManager = new WaypointsManager(map, path);
 		waypointsManager->GenerateWaypoints();
+		waypointsManager->PrintWaypoints();
 
 		printf("Generate particles\n");
 		Position startPosition(config->startX, config->startY, config->startYaw);
 		LocalizationManager* localizationManager = new LocalizationManager(startPosition, map, AMOUNT_OF_PARTICLES);
 		localizationManager->PrintParticles();
 
+		/* Going through all the waypoints */
+		for (uint32_t index = 0; index < waypointsManager->waypoints.size(); index++)
+		{
+			printf("Waypoint No. %u\n", index);
+
+			Pose currPos;
+			myRobot.SetAngle(waypointsManager->waypoints[index].yaw);
+
+			do
+			{
+				myRobot.Move();
+				myRobot.Update(localizationManager);
+				currPos = myRobot.GetPosition();
+			} while ((map->GetMap())[(int)currPos.getX()][(int)currPos.getY()] != eCellType_wayPointCell);
+		}
+
+		printf("FINISH\n");
+
+
+#if 0
 		printf("Show map\n");
+
 		while (myRobot.IsConnected())
 		{
-			map->Show();
-			//myRobot.MoveAround();
-			sleep(0.5);
+			try
+			{
+				map->Show();
+				//myRobot.MoveAround();
+				sleep(0.5);
+			} catch (const HamsterAPI::HamsterError & message_error) {
+				HamsterAPI::Log::i("Connected", message_error.what());
+			}
 		}
+#endif
 	}
 	catch (const HamsterAPI::HamsterError & connection_error)
 	{

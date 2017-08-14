@@ -11,9 +11,7 @@
 
 using namespace std;
 
-WaypointsManager::WaypointsManager(Map* map, Path* path) : m_map(map), m_path(path)
-{
-}
+WaypointsManager::WaypointsManager(Map* map, Path* path) : m_map(map), m_path(path) {}
 
 void WaypointsManager::GenerateWaypoints()
 {
@@ -25,6 +23,18 @@ void WaypointsManager::GenerateWaypoints()
 				 m_path->computedPath[pathIndex + DISTANCE_BETWEEN_WAYPOINTS]->GetX(),
 				 m_path->computedPath[pathIndex + DISTANCE_BETWEEN_WAYPOINTS]->GetY());
 	}
+
+	/* Update angels */
+	for (uint32_t index = 0; index < waypoints.size() - 1; index++)
+	{
+		waypoints[index].yaw = GetAngle(waypoints[index].x, waypoints[index].y,
+										  waypoints[index + 1].x, waypoints[index + 1].y);
+	}
+}
+
+double WaypointsManager::GetAngle(double x1, double y1, double x2, double y2) const
+{
+	return atan2(y1 - y2, x1 - x2) * 180 / M_PI;
 }
 
 void WaypointsManager::Raytrace(int x0, int y0, int x1, int y1)
@@ -54,6 +64,17 @@ void WaypointsManager::Raytrace(int x0, int y0, int x1, int y1)
 		}
 	}
 
-	cout << "(" << x << "," << y << ")" << endl;
 	(m_map->GetMap())[x][y] = eCellType_wayPointCell;
+
+	waypoints.push_back(Position(x, y, 0));
 }
+
+void WaypointsManager::PrintWaypoints() const
+{
+	for (uint32_t index = 0; index < waypoints.size(); index++)
+	{
+		Position waypoint = waypoints[index];
+		printf("Waypoint(%f, %f, %f)\n", waypoint.x, waypoint.y, waypoint.yaw);
+	}
+}
+

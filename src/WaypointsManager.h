@@ -8,15 +8,21 @@
 #ifndef WAYPOINTSMANAGER_H_
 #define WAYPOINTSMANAGER_H_
 
+#include <vector>
 #include "Map.h"
 #include "Typedefs.h"
+
+using namespace std;
 
 class WaypointsManager
 {
 public:
+	vector<Position> waypoints;
+
 	WaypointsManager(Map* map, Path* path);
 
 	void GenerateWaypoints();
+	void PrintWaypoints() const;
 
 private:
 	/**
@@ -24,6 +30,8 @@ private:
 	 * without collisions with obstacles.
 	 */
 	void Raytrace(int x0, int y0, int x1, int y1);
+
+	double GetAngle(double x1, double y1, double x2, double y2) const;
 
 private:
 	Map* m_map;

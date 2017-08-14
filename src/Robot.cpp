@@ -7,12 +7,12 @@
 
 #include "Robot.h"
 
-#define MOVE_SPEED			   (0.8)
+#define MOVE_SPEED			   (0.3)
 #define TURN_SPEED			   (0.1)
 #define MIN_DISTANCE_FROM_WALL (0.8)
 #define OBS_RANGE		   	   (10)
 
-Robot::Robot(double size) : m_size(size), m_direction(), currX(0), currY(0), currYaw(0)
+Robot::Robot(double x, double y, double yaw, double size) : m_size(size), m_direction(), currX(x), currY(y), currYaw(yaw)
 {
 	directions[eRobotDirection_front] = t_direction(MOVE_SPEED, 0.0);
 	directions[eRobotDirection_right] = t_direction(TURN_SPEED, 45.0);
@@ -28,6 +28,8 @@ Robot::Robot(double size) : m_size(size), m_direction(), currX(0), currY(0), cur
 		}
 
 		m_hamster = new HamsterAPI::Hamster(1);
+
+		m_hamster->setInitialPose(Pose(currX, currY, currYaw));
 		SetDirection(eRobotDirection_front);
 		sleep(1);
 	}
@@ -83,6 +85,10 @@ bool Robot::IsConnected() const
 void Robot::UpdatePose()
 {
 	Pose pose = GetPosition();
+
+	lastX = currX;
+	lastY = currY;
+	lastYaw = currYaw;
 
 	currX = pose.getX();
 	currY = pose.getY();
@@ -170,3 +176,42 @@ void Robot::MoveAround()
 	Move();
 }
 
+void Robot::SetInitPose(double x, double y, double yaw)
+{
+	m_hamster->setInitialPose(Pose(x, y, yaw));
+}
+
+void Robot::Update(LocalizationManager* locManager)
+{
+	UpdatePose();
+	Position delta(currX - lastX, currY - lastY, currYaw - lastYaw);
+	locManager->UpdateAllParticles(&delta);
+}
+
+void Robot::MoveTo(double yaw)
+{
+	double speed = 0.1;
+	double diff;
+
+	Stop();
+
+//	while (!_wpMgr->isNearWaypoint(getXpos(), getYpos(), getYaw()))
+//	{
+//		Read();
+//		diff = _Yaw - yaw;
+//		if (abs(diff) > 1.5) { this->setYaw(yaw); }
+//		setSpeed(speed,0);
+//	}
+//
+//	setSpeed(speed / 2, 0);
+//
+//	while (!_wpMgr->isInWaypoint(getXpos(), getYpos(), getYaw()))
+//	{
+//		Read();
+//		diff = _Yaw - yaw;
+//		if (abs(diff) > 1.5) { this->setYaw(yaw); }
+//		setSpeed(speed / 2, 0);
+//	}
+
+	Stop();
+}

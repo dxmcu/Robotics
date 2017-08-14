@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <HamsterAPIClientCPP/Hamster.h>
+#include "LocalizationManager.h"
 
 using namespace HamsterAPI;
 
@@ -39,7 +40,7 @@ public:
 	} t_direction;
 
 public:
-	Robot(double size = DEFAULT_ROBOT_SIZE);
+	Robot(double x = 0, double y = 0, double yaw = 0, double size = DEFAULT_ROBOT_SIZE);
 	virtual ~Robot() {};
 
 	static Robot& GetInstance();
@@ -49,6 +50,9 @@ public:
 	double GetSize() const;
 	OccupancyGrid GetOccupancyGrid() const;
 	void UpdatePose();
+	void SetInitPose(double x, double y, double yaw);
+
+	void Update(LocalizationManager* locManager);
 
 	/* Movement */
 	void MoveAround();
@@ -57,6 +61,7 @@ public:
 	void SetDirection(ERobotDirection direction);
 	void SetSpeed(double speed);
 	void SetAngle(double angle);
+	void MoveTo(double yaw);
 
 	bool CheckWallAhead() const;
 	void GetScansBetween(double min, double max,std::vector<double> & distances) const;
@@ -71,6 +76,7 @@ private:
 	t_direction directions[eRobotDirection_numberOfDirections];
 
 	double currX, currY, currYaw;
+	double lastX, lastY, lastYaw;
 };
 
 #endif /* ROBOT_H_ */

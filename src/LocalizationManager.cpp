@@ -97,6 +97,6 @@ void LocalizationManager::PrintParticles() const
 	for (uint32_t index = 0; index < m_lstOfParticles.size(); index++)
 	{
 		Particle currPar = m_lstOfParticles[index];
-		printf("Particle %u: X: %f, Y: %f, Yaw: %f, Belief: %f\n", index, currPar.pos.x, currPar.pos.y, currPar.pos.yaw, currPar.belief);
+		printf("Particle(%f, %f, %f, %f)\n", currPar.pos.x, currPar.pos.y, currPar.pos.yaw, currPar.belief);
 	}
 }
