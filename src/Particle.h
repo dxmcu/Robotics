@@ -17,7 +17,7 @@ public:
 	double belief;
 
 	/* CTORs */
-	Particle(Position pos, double belief, Map* map);
+	Particle(Position pos, double belief, Map* map, bool toRandom = true);
 	~Particle();
 
 	Particle CreateAnotherParticle() const;

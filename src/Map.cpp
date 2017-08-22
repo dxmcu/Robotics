@@ -17,6 +17,8 @@ Map::Map(OccupancyGrid &grid, double robotSize) : m_grid(grid)
 	m_robotSizeInPixels = (robotSize / 2.0) / (grid.getResolution());
 	ConvertToCoarseGrid();
 
+	printf("===== Map size: %u/%u =====\n", GetHeight(), GetWidth());
+
 	m_matrix = cv::Mat(m_coarseGrid->getHeight(), m_coarseGrid->getWidth(), CV_8UC3);
 	m_map = new ECellType*[m_coarseGrid->getHeight()];
 
@@ -101,6 +103,12 @@ int Map::GetWidth()
 int Map::GetHeight()
 {
 	return m_grid.getHeight() / m_robotSizeInPixels;
+}
+
+bool Map::IsValidPoint(int row, int col)
+{
+	return (row >= 0 && row < GetHeight()) &&
+		   (col >= 0 && col < GetWidth());
 }
 
 void Map::ConvertToCoarseGrid()

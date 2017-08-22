@@ -7,8 +7,8 @@
 
 #include "Robot.h"
 
-#define MOVE_SPEED			   (0.3)
-#define TURN_SPEED			   (0.1)
+#define MOVE_SPEED			   (0.8)
+#define TURN_SPEED			   (0.3)
 #define MIN_DISTANCE_FROM_WALL (0.8)
 #define OBS_RANGE		   	   (10)
 
@@ -186,32 +186,6 @@ void Robot::Update(LocalizationManager* locManager)
 	UpdatePose();
 	Position delta(currX - lastX, currY - lastY, currYaw - lastYaw);
 	locManager->UpdateAllParticles(&delta);
-}
 
-void Robot::MoveTo(double yaw)
-{
-	double speed = 0.1;
-	double diff;
-
-	Stop();
-
-//	while (!_wpMgr->isNearWaypoint(getXpos(), getYpos(), getYaw()))
-//	{
-//		Read();
-//		diff = _Yaw - yaw;
-//		if (abs(diff) > 1.5) { this->setYaw(yaw); }
-//		setSpeed(speed,0);
-//	}
-//
-//	setSpeed(speed / 2, 0);
-//
-//	while (!_wpMgr->isInWaypoint(getXpos(), getYpos(), getYaw()))
-//	{
-//		Read();
-//		diff = _Yaw - yaw;
-//		if (abs(diff) > 1.5) { this->setYaw(yaw); }
-//		setSpeed(speed / 2, 0);
-//	}
-
-	Stop();
+	printf("FINISH update robot\n");
 }

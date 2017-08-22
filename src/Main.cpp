@@ -16,7 +16,7 @@
 using namespace std;
 
 #define DEFAULT_CONFIGURATION_FILE			"./Config.json"
-#define AMOUNT_OF_PARTICLES					(100)
+#define AMOUNT_OF_PARTICLES					(40)
 
 int main(int argc, char ** argv)
 {
@@ -55,6 +55,8 @@ int main(int argc, char ** argv)
 		LocalizationManager* localizationManager = new LocalizationManager(startPosition, map, AMOUNT_OF_PARTICLES);
 		localizationManager->PrintParticles();
 
+#if 0
+
 		/* Going through all the waypoints */
 		for (uint32_t index = 0; index < waypointsManager->waypoints.size(); index++)
 		{
@@ -65,30 +67,36 @@ int main(int argc, char ** argv)
 
 			do
 			{
+				printf("Moving\n");
 				myRobot.Move();
+				printf("Updating\n");
 				myRobot.Update(localizationManager);
 				currPos = myRobot.GetPosition();
-			} while ((map->GetMap())[(int)currPos.getX()][(int)currPos.getY()] != eCellType_wayPointCell);
+
+				printf("FINISH while loop\n");
+			} while ((map->GetMap())[(int)currPos.getY()][(int)currPos.getX()] != eCellType_wayPointCell);
 		}
 
 		printf("FINISH\n");
 
+#endif
 
-#if 0
 		printf("Show map\n");
+		map->Show();
+
 
 		while (myRobot.IsConnected())
 		{
 			try
 			{
 				map->Show();
-				//myRobot.MoveAround();
+				myRobot.MoveAround();
 				sleep(0.5);
 			} catch (const HamsterAPI::HamsterError & message_error) {
 				HamsterAPI::Log::i("Connected", message_error.what());
 			}
 		}
-#endif
+
 	}
 	catch (const HamsterAPI::HamsterError & connection_error)
 	{

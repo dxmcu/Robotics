@@ -61,7 +61,6 @@ public:
 	void SetDirection(ERobotDirection direction);
 	void SetSpeed(double speed);
 	void SetAngle(double angle);
-	void MoveTo(double yaw);
 
 	bool CheckWallAhead() const;
 	void GetScansBetween(double min, double max,std::vector<double> & distances) const;

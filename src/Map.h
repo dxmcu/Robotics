@@ -21,6 +21,7 @@ public:
 
 	int GetWidth();
 	int GetHeight();
+	bool IsValidPoint(int row, int col);
 
 	void Show();
 	OccupancyGrid* GetCoarseGrid();
